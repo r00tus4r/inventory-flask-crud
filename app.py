@@ -94,7 +94,23 @@ def read_item(id):
 
 
 @app.route('/update/<int:id>/', methods=['GET', 'POST'])
-def update_item(id): return 'update item'
+def update_item(id):
+    item = Item.query.get_or_404(id)
+    form = ItemForm()
+    form.submit.label.text = 'Update'
+    if form.validate_on_submit():
+        item.name = form.name.data
+        item.description = form.description.data
+        item.quantity = form.quantity.data
+        item.price = form.price.data
+        db.session.commit()
+        flash('♻️ Item updated successfully!', 'success')
+        return redirect(url_for('index'))
+    form.name.data = item.name
+    form.description.data = item.description
+    form.quantity.data = item.quantity
+    form.price.data = item.price
+    return render_template('update.html', form=form, item=item)
 
 
 @app.route('/delete/<int:id>/')
