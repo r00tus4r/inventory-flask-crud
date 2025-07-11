@@ -1,14 +1,28 @@
-<nav class="navbar navbar-expand-lg bg-dark navbar-dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-4">
     <div class="container">
-        <a href="{{ url_for('index') }}" class="navbar-brand">Inventory App</a>
-        <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#menu-toggle"
+        <a class="navbar-brand text-uppercase" href="{{ url_for('index') }}">
+            <i class="bi bi-box-seam"></i> Inventory App
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu-toggle"
             aria-controls="menu-toggle" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="menu-toggle">
-            <div class="navbar-nav">
-                <a href="{{ url_for('index') }}" class="nav-link">Home</a>
-            </div>
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'index' %}active{% endif %}"
+                        href="{{ url_for('index') }}">
+                        <i class="bi bi-house-door-fill"></i> Home
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {% if request.endpoint == 'create_item' %}active{% endif %}"
+                        href="{{ url_for('create_item') }}">
+                        <i class="bi bi-plus-circle"></i> Add Item
+                    </a>
+                </li>
+            </ul>
         </div>
     </div>
 </nav>

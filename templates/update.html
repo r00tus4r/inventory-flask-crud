@@ -1,59 +1,63 @@
 {% extends 'base.html' %}
 {% block title %}Update Item{% endblock %}
+
 {% block content %}
-    <div class="bg-light border shandow p-3 m-1">
-        <h5 class="text-uppercase display-6 mb-4">Update Item</h5>
-        <form method="post" novalidate>
-            {{ form.hidden_tag() }}
-            <div class="form-group mb-3">
-                {{ form.name.label(class="form-label") }}
-                {{ form.name(class="form-control" + (' is-invalid' if form.name.errors else ''), placeholder="Enter note name here ...") }}
-                {% if form.name.description %}
-                    <div class="form-text text-muted"><small>{{ form.name.description }}</small></div>
-                {% endif %}
-                {% for error in form.name.errors %}
-                    <div class="invalid-feedback">
-                        {{ error }}
-                    </div>
-                {% endfor %}
-            </div>
-            <div class="form-group mb-3">
-                {{ form.description.label(class="form-label") }}
-                {{ form.description(class="form-control" + (' is-invalid' if form.description.errors else ''), rows=6, placeholder="Type your note here ...") }}
-                {% if form.description.description %}
-                    <div class="form-text text-muted"><small>{{ form.description.description }}</small></div>
-                {% endif %}
-                {% for error in form.description.errors %}
-                    <div class="invalid-feedback">
-                        {{ error }}
-                    </div>
-                {% endfor %}
-            </div>
-            <div class="form-group mb-3">
-                {{ form.quantity.label(class="form-label") }}
-                {{ form.quantity(class="form-control" + (' is-invalid' if form.quantity.errors else ''), rows=6, placeholder="Type your note here ...") }}
-                {% if form.quantity.description %}
-                    <div class="form-text text-muted"><small>{{ form.quantity.description }}</small></div>
-                {% endif %}
-                {% for error in form.quantity.errors %}
-                    <div class="invalid-feedback">
-                        {{ error }}
-                    </div>
-                {% endfor %}
-            </div>
-            <div class="form-group mb-3">
-                {{ form.price.label(class="form-label") }}
-                {{ form.price(class="form-control" + (' is-invalid' if form.price.errors else ''), rows=6, placeholder="Type your note here ...") }}
-                {% if form.price.description %}
-                    <div class="form-text text-muted"><small>{{ form.price.description }}</small></div>
-                {% endif %}
-                {% for error in form.price.errors %}
-                    <div class="invalid-feedback">
-                        {{ error }}
-                    </div>
-                {% endfor %}
-            </div>
-            {{ form.submit(class="btn btn-primary w-100") }}
-        </form>
-    </div>
+    <h2 class="h5 text-uppercase mb-4">Update Item</h2>
+    
+    <form method="post" novalidate>
+        {{ form.hidden_tag() }}
+
+        <!-- Name -->
+        <div class="mb-3">
+            {{ form.name.label(class="form-label") }}
+            {{ form.name(class="form-control" + (' is-invalid' if form.name.errors else ''), placeholder="Item name") }}
+            {% if form.name.description %}
+                <div class="form-text text-muted">{{ form.name.description }}</div>
+            {% endif %}
+            {% for error in form.name.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Description -->
+        <div class="mb-3">
+            {{ form.description.label(class="form-label") }}
+            {{ form.description(class="form-control" + (' is-invalid' if form.description.errors else ''), rows=4, placeholder="Optional description") }}
+            {% if form.description.description %}
+                <div class="form-text text-muted">{{ form.description.description }}</div>
+            {% endif %}
+            {% for error in form.description.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Quantity -->
+        <div class="mb-3">
+            {{ form.quantity.label(class="form-label") }}
+            {{ form.quantity(class="form-control" + (' is-invalid' if form.quantity.errors else ''), placeholder="Enter quantity") }}
+            {% if form.quantity.description %}
+                <div class="form-text text-muted">{{ form.quantity.description }}</div>
+            {% endif %}
+            {% for error in form.quantity.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Price -->
+        <div class="mb-3">
+            {{ form.price.label(class="form-label") }}
+            {{ form.price(class="form-control" + (' is-invalid' if form.price.errors else ''), placeholder="Enter price") }}
+            {% if form.price.description %}
+                <div class="form-text text-muted">{{ form.price.description }}</div>
+            {% endif %}
+            {% for error in form.price.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+            {% endfor %}
+        </div>
+
+        <!-- Submit -->
+        <div class="d-grid">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </form>
 {% endblock %}

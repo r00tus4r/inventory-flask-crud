@@ -1,53 +1,72 @@
 {% extends 'base.html' %}
-{% block title %}Home &amp; Inventory{% endblock %}
+{% block title %}Inventory Items{% endblock %}
+
 {% block content %}
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3 gap-2">
+        <h2 class="h4 mb-0 text-uppercase">Inventory Items</h2>
+        <div class="d-flex gap-2">
+            <a href="{{ url_for('create_item') }}" class="btn btn-outline-success">
+                <i class="bi bi-plus-circle"></i> Add Item
+            </a>
+            <a href="#" class="btn btn-success">
+                <i class="bi bi-upload"></i> Export
+            </a>
+        </div>
+    </div>
+
+    <form action="{{ url_for('index') }}" method="get" class="input-group mb-4">
+        <input type="text" name="q" id="q" class="form-control" placeholder="Search items...">
+        <button type="submit" class="btn btn-primary">
+            <i class="bi bi-search"></i>
+        </button>
+    </form>
+
     {% if items %}
-        <div class="bg-light border shandow p-3 m-1">
-            <h5 class="text-uppercase display-6 mb-4">Inventory items</h5>
-            <div class="d-flex align-item-center justify-content-between mb-3">
-                <form action="#" method="get" class="input-group w-50">
-                    <input type="text" name="q" id="q" class="form-control" placeholder="Search ...">
-                    <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i></button>
-                </form>
-                <div>
-                    <a href="{{ url_for('create_item') }}" class="btn btn-outline-success"><i class="bi bi-plus-circle"></i> Add item</a>
-                    <a href="#" class="btn btn-success"><i class="bi bi-upload"></i> Export</a>
-                </div>
-            </div>
-            <table class="table table-striped-columns table-bordered">
-                <thead>
-                    <tr class="text-uppercase">
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Quantity</th>
-                        <th>Price</th>
-                        <th>Created At</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in items %}
-                        <tr>
-                            <td>{{ item.name }}</td>
-                            <td>{{ item.description }}</td>
-                            <td>{{ item.quantity }}</td>
-                            <td>${{ item.price }}</td>
-                            <td>{{ item.created_at.strftime('%Y-%m-%d') }}</td>
-                            <td>
-                                <a href="{{ url_for('read_item', id=item.id) }}" class="btn btn-sm btn-primary"><i class="bi bi-eye-fill"></i> View</a>
-                                <a href="{{ url_for('update_item', id=item.id) }}" class="btn btn-sm btn-success"><i class="bi bi-pencil-fill"></i> Update</a>
-                                <a href="{{ url_for('delete_item', id=item.id) }}" class="btn btn-sm btn-danger"><i class="bi bi-trash-fill"></i> Delete</a>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered align-middle">
+            <thead class="table-dark text-uppercase text-center">
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Quantity</th>
+                    <th>Price ($)</th>
+                    <th>Created</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.name }}</td>
+                    <td class="text-muted">{{ item.description }}</td>
+                    <td class="text-center">{{ item.quantity }}</td>
+                    <td>${{ "%.2f"|format(item.price) }}</td>
+                    <td>{{ item.created_at.strftime('%Y-%m-%d') }}</td>
+                    <td class="text-center">
+                        <div class="btn-group btn-group-sm" role="group">
+                            <a href="{{ url_for('read_item', id=item.id) }}" class="btn btn-outline-primary">
+                                <i class="bi bi-eye-fill"></i>
+                            </a>
+                            <a href="{{ url_for('update_item', id=item.id) }}" class="btn btn-outline-success">
+                                <i class="bi bi-pencil-fill"></i>
+                            </a>
+                            <a href="{{ url_for('delete_item', id=item.id) }}" onclick="return confirm('Are you sure?')"
+                                class="btn btn-outline-danger">
+                                <i class="bi bi-trash-fill"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
     {% else %}
-        <div class="bg-light border shandow p-5 m-1">
-            <h4>🤷 No inventory items yet!</h4>
-            <p class="lead">Add new items here!</p>
-            <a href="{{ url_for('create_item') }}" class="btn btn-primary"><i class="bi bi-plus-circle-fill"></i> Add item</a>
-        </div>
+    <div class="alert alert-info text-center">
+        <p class="lead">🤷 No inventory items yet.</p>
+        <a href="{{ url_for('create_item') }}" class="btn btn-primary">
+            <i class="bi bi-plus-circle-fill"></i> Add First Item
+        </a>
+    </div>
     {% endif %}
 {% endblock %}
