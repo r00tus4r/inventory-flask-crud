@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, flash, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 import os
 import dotenv
@@ -75,7 +75,16 @@ def index():
 
 
 @app.route('/create', methods=['GET', 'POST'])
-def create_item(): return 'create item'
+def create_item():
+    form = ItemForm()
+    form.submit.label.text = 'Create'
+    if form.validate_on_submit():
+        item = Item(name=form.name.data, description=form.description.data, quantity=form.quantity.data, price=form.price.data)
+        db.session.add(item)
+        db.session.commit()
+        flash('✅ Item created successfully!', 'success')
+        return redirect(url_for('index'))
+    return render_template('create.html', form=form)
 
 
 @app.route('/read/<int:id>/')
