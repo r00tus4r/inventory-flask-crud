@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}Home &amp; Inventory{% endblock %}
+{% block content %}
+    {% if items %}
+        <div class="bg-light border shandow p-3 m-1">
+            <h5 class="text-uppercase display-6 mb-4">Inventory items</h5>
+            <div class="d-flex align-item-center justify-content-between mb-3">
+                <form action="#" method="get" class="input-group w-50">
+                    <input type="text" name="q" id="q" class="form-control" placeholder="Search ...">
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-search"></i></button>
+                </form>
+                <div>
+                    <a href="{{ url_for('create_item') }}" class="btn btn-outline-success"><i class="bi bi-plus-circle"></i> Add item</a>
+                    <a href="#" class="btn btn-success"><i class="bi bi-upload"></i> Export</a>
+                </div>
+            </div>
+            <table class="table table-striped-columns table-bordered">
+                <thead>
+                    <tr class="text-uppercase">
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Created At</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                        <tr>
+                            <td>{{ item.name }}</td>
+                            <td>{{ item.description }}</td>
+                            <td>{{ item.quantity }}</td>
+                            <td>${{ item.price }}</td>
+                            <td>{{ item.created_at.strftime('%Y-%m-%d') }}</td>
+                            <td>
+                                <a href="{{ url_for('update_item', id=item.id) }}" class="btn btn-sm btn-success"><i class="bi bi-pencil-fill"></i> Update</a>
+                                <a href="{{ url_for('delete_item', id=item.id) }}" class="btn btn-sm btn-danger"><i class="bi bi-trash-fill"></i> Delete</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <div class="bg-light border shandow p-5 m-1">
+            <h4>🤷 No inventory items yet!</h4>
+            <p class="lead">Add new items here!</p>
+            <a href="{{ url_for('create_item') }}" class="btn btn-primary"><i class="bi bi-plus-circle-fill"></i> Add item</a>
+        </div>
+    {% endif %}
+{% endblock %}
