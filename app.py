@@ -1,4 +1,4 @@
-from flask import Flask, render_template, flash, redirect, url_for
+from flask import Flask, render_template, flash, redirect, url_for, request
 from flask_sqlalchemy import SQLAlchemy
 import os
 import dotenv
@@ -6,6 +6,7 @@ from datetime import datetime
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, IntegerField, FloatField, SubmitField
 from wtforms.validators import Length, DataRequired, NumberRange
+from flask_restful import Api, Resource
 
 
 dotenv.load_dotenv()
@@ -120,6 +121,73 @@ def delete_item(id):
     db.session.commit()
     flash('🗑️ Item deleted successfully!', 'success')
     return redirect(url_for('index'))
+
+
+# ====================================================================
+
+api = Api(app)
+
+def item_to_dict(item):
+    return {
+        'id': item.id,
+        'name': item.name,
+        'description': item.description,
+        'quantity': item.quantity,
+        'price': item.price,
+        'created_at': item.created_at.isoformat()
+    }
+
+
+class ItemListResource(Resource):
+    def get(self):
+        items = Item.query.order_by(Item.created_at.desc()).all()
+        return [item_to_dict(item) for item in items], 200
+
+    def post(self):
+        data = request.get_json()
+        if not data:
+            return {'message': 'No input data provided'}, 400
+
+        name = data.get('name')
+        description = data.get('description')
+        quantity = data.get('quantity')
+        price = data.get('price')
+
+        if not all([name, quantity, price]):
+            return {'message': 'Name, quantity, and price are required.'}, 400
+
+        item = Item(name=name, description=description, quantity=quantity, price=price)
+        db.session.add(item)
+        db.session.commit()
+        return item_to_dict(item), 201
+
+
+class ItemResource(Resource):
+    def get(self, item_id):
+        item = Item.query.get_or_404(item_id)
+        return item_to_dict(item), 200
+
+    def put(self, item_id):
+        item = Item.query.get_or_404(item_id)
+        data = request.get_json()
+
+        item.name = data.get('name', item.name)
+        item.description = data.get('description', item.description)
+        item.quantity = data.get('quantity', item.quantity)
+        item.price = data.get('price', item.price)
+
+        db.session.commit()
+        return item_to_dict(item), 200
+
+    def delete(self, item_id):
+        item = Item.query.get_or_404(item_id)
+        db.session.delete(item)
+        db.session.commit()
+        return {'message': 'Item deleted successfully.'}, 200
+
+
+api.add_resource(ItemListResource, '/items')
+api.add_resource(ItemResource, '/items/<int:item_id>')
 
 
 if __name__ == '__main__':
