@@ -114,7 +114,12 @@ def update_item(id):
 
 
 @app.route('/delete/<int:id>/')
-def delete_item(id): return 'delete item'
+def delete_item(id):
+    item = Item.query.get_or_404(id)
+    db.session.delete(item)
+    db.session.commit()
+    flash('🗑️ Item deleted successfully!', 'success')
+    return redirect(url_for('index'))
 
 
 if __name__ == '__main__':
