@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}{{ item.name }}{% endblock %}
+{% block content %}
+<div class="bg-light border shandow p-5 m-1">
+    <h5 class="text-uppercase display-6 mb-4">{{ item.name }}</h5>
+    {% if item.description %}
+        <p><strong>Description:</strong> {{ item.description }}</p>
+    {% endif %}
+    <p><strong>Quantity:</strong> {{ item.quantity }}</p>
+    <p><strong>Price:</strong> <code>${{ item.price }}</code></p>
+    <p><strong>Created At:</strong>
+        <time datetime="{{ item.created_at.isoformat() }}">
+            {{ item.created_at.strftime('%B %d, %Y') }}
+        </time>
+    </p>
+    <hr>
+    <a href="{{ url_for('index') }}" class="btn btn-primary"><i class="bi bi-arrow-left"></i> Go back</a>
+    <a href="{{ url_for('update_item', id=item.id) }}" class="btn btn-success"><i class="bi bi-pencil-fill"></i> Update</a>
+    <a href="{{ url_for('delete_item', id=item.id) }}" class="btn btn-danger"><i class="bi bi-trash-fill"></i> Delete</a>
+</div>
+{% endblock %}

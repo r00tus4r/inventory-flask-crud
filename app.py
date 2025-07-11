@@ -88,7 +88,9 @@ def create_item():
 
 
 @app.route('/read/<int:id>/')
-def read_item(id): return 'read item'
+def read_item(id):
+    item = Item.query.get_or_404(id)
+    return render_template('read.html', item=item)
 
 
 @app.route('/update/<int:id>/', methods=['GET', 'POST'])
